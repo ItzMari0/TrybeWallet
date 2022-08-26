@@ -787,7 +787,7 @@ Os requisitos abaixo não serão avaliados pelo avaliador, porém você poderá 
   
   Esse projeto conta com requisitos especiais chamados de requisitos `Startest`, para concluir um requisito Startest, além de desenvolver o que é pedido no requisito você também deverá desenvolver testes automatizados utilizando a biblioteca [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) que deverão verificar os mesmos pontos pedidos no requisito. 
   
-  Para auxiliar no desenvolvimento dos seus testes a pasta `tests/helpers`, consta com ferramentas como `mockData`, `renderWithRouter` e `renderWithRouterAndRedux`.
+  Para auxiliar no desenvolvimento dos seus testes a pasta `tests/helpers`, consta com ferramentas como `mockData` e `renderWithRouterAndRedux`.
 
   Exemplo de requisito Startest:
 
