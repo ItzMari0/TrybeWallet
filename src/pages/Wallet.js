@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-class Wallet extends React.Component {
+export default class Wallet extends Component {
   render() {
-    return <div>TrybeWallet</div>;
+    return (
+      <div>Wallet</div>
+    );
   }
 }
-
-export default Wallet;
