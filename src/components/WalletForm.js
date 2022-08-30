@@ -8,13 +8,12 @@ class WalletForm extends Component {
   constructor() {
     super();
     this.state = {
-      id: 0,
-      expenseValue: '',
+      value: '',
       description: '',
-      currencyType: 'USD',
-      paymentMethod: 'Dinheiro',
-      category: 'Alimentação',
-      exchangeRates: '',
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: 'Alimentação',
+      exchangeRates: {},
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -36,29 +35,27 @@ class WalletForm extends Component {
     this.setState({
       exchangeRates: price,
     });
-    this.setState((idValue) => ({
-      id: idValue.id + 1,
-    }));
 
     const { dispatch } = this.props;
     dispatch(expensesList(this.state));
     this.setState({
-      expenseValue: '',
+      value: '',
       description: '',
-      currencyType: 'USD',
-      paymentMethod: 'Dinheiro',
-      category: 'Alimentação',
-      exchangeRates: '' });
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: 'Alimentação',
+      exchangeRates: {},
+    });
   };
 
   render() {
     const { wallet } = this.props;
     const { currencies } = wallet;
-    const { expenseValue,
+    const { value,
       description,
-      currencyType,
-      paymentMethod,
-      category } = this.state;
+      currency,
+      method,
+      tag } = this.state;
 
     return (
       <form>
@@ -66,10 +63,10 @@ class WalletForm extends Component {
           Despesas
           <input
             data-testid="value-input"
-            type="text"
+            type="number"
             id="expenses-value"
-            name="expenseValue"
-            value={ expenseValue }
+            name="value"
+            value={ value }
             onChange={ this.handleChange }
           />
         </label>
@@ -89,12 +86,12 @@ class WalletForm extends Component {
           <select
             data-testid="currency-input"
             id="currency"
-            name="currencyType"
-            value={ currencyType }
+            name="currency"
+            value={ currency }
             onChange={ this.handleChange }
           >
-            { currencies.map((currency, index) => (
-              <option key={ index }>{ currency }</option>
+            { currencies.map((currencyType, index) => (
+              <option key={ index }>{ currencyType }</option>
             )) }
           </select>
         </label>
@@ -103,8 +100,8 @@ class WalletForm extends Component {
           <select
             data-testid="method-input"
             id="checkout"
-            name="paymentMethod"
-            value={ paymentMethod }
+            name="method"
+            value={ method }
             onChange={ this.handleChange }
           >
             <option>Dinheiro</option>
@@ -117,8 +114,8 @@ class WalletForm extends Component {
           <select
             data-testid="tag-input"
             id="category"
-            name="category"
-            value={ category }
+            name="tag"
+            value={ tag }
             onChange={ this.handleChange }
           >
             <option>Alimentação</option>
