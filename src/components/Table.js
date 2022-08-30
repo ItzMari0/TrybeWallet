@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { deleteExpense } from '../redux/actions';
 
 class Table extends Component {
+  handleClick = ({ target }) => {
+    const { id } = target;
+    const { dispatch } = this.props;
+    dispatch(deleteExpense(id));
+  };
+
   render() {
     const { expenses } = this.props;
     const expenseToTable = expenses.map((expense, index) => (
@@ -20,6 +27,17 @@ class Table extends Component {
           }
         </td>
         <td>Real</td>
+        <td>
+          <button
+            type="button"
+            data-testid="delete-btn"
+            id={ expense.id }
+            onClick={ this.handleClick }
+          >
+            Deletar
+          </button>
+
+        </td>
       </tr>
     ));
     return (

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
+import { string } from 'prop-types';
 
 class Header extends Component {
   render() {
@@ -27,9 +28,10 @@ const mapStateToProps = (state) => ({
 });
 
 Header.propTypes = {
-  email: PropTypes.string.isRequired,
-  reduce: PropTypes.func.isRequired,
-  expenses: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-};
+  email: string,
+  // email: PropTypes.string.isRequired,
+  // reduce: PropTypes.func.isRequired,
+  // expenses: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+}.isRequired;
 
 export default connect(mapStateToProps)(Header);
