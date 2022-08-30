@@ -4,6 +4,7 @@ export const USER_ACTIONS = 'USER_ACTIONS';
 export const REQUEST_CURRENCY = 'REQUEST_CURRENCY';
 export const RECEIVED_CURRENCIES = 'RECEIVED_CURRENCIES';
 export const FAILED_REQUEST = 'FAILED_REQUEST';
+export const EXPENSES_LIST = 'EXPENSES_LIST';
 
 export function userLoginAction(state) {
   return {
@@ -29,6 +30,13 @@ export function failedRequest(error) {
   return {
     type: FAILED_REQUEST,
     error,
+  };
+}
+
+export function expensesList(expenses) {
+  return {
+    type: EXPENSES_LIST,
+    expenses,
   };
 }
 

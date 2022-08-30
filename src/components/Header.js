@@ -3,6 +3,27 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 class Header extends Component {
+  // componentDidMount() {
+  //   this.totalExpenses();
+  // }
+
+  // componentDidUpdate() {
+  //   this.totalExpenses();
+  // }
+
+  // totalExpenses = () => {
+  //   const { expenses } = this.props;
+  //   let valueTotal = 0;
+  //   if (expenses.length !== 0) {
+  //     valueTotal = expenses.reduce((acc, { expense, coin, exchangeRates }) => {
+  //       const Value = acc + (Number(expense) * Number(exchangeRates[coin].ask));
+  //       return Value;
+  //     }, 0);
+  //     return valueTotal;
+  //   }
+  //   return valueTotal;
+  // };
+
   render() {
     const { email } = this.props;
     return (

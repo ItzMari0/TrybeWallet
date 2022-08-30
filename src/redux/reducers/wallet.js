@@ -1,4 +1,4 @@
-import { RECEIVED_CURRENCIES, REQUEST_CURRENCY } from '../actions/index';
+import { RECEIVED_CURRENCIES, REQUEST_CURRENCY, EXPENSES_LIST } from '../actions/index';
 
 const INITIAL_STATE = {
   currencies: [],
@@ -14,7 +14,12 @@ const wallet = (state = INITIAL_STATE, action) => {
   };
   case RECEIVED_CURRENCIES: return {
     ...state,
-    currencies: Object.keys(action.currencies).filter((coin) => coin !== 'USDT'),
+    currencies: Object.keys(action.currencies).filter((currency) => currency !== 'USDT'),
+  };
+  case EXPENSES_LIST: return {
+    ...state,
+    expenses: [...state.expenses.filter((object) => object.currency !== ''),
+      { id: state.expenses.length, ...action.expenses }],
   };
   default: return state;
   }
