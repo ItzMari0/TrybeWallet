@@ -1,7 +1,10 @@
 import { RECEIVED_CURRENCIES,
   REQUEST_CURRENCY,
   EXPENSES_LIST,
-  DELETE_EXPENSE } from '../actions/index';
+  DELETE_EXPENSE,
+  EDIT_EXPENSE,
+  SAVE_EDIT,
+} from '../actions/index';
 
 const INITIAL_STATE = {
   currencies: [],
@@ -30,6 +33,22 @@ const wallet = (state = INITIAL_STATE, action) => {
     ...state,
     expenses: [...state.expenses
       .filter((deleted) => deleted.id !== Number(action.expenseDetails))],
+  };
+  case EDIT_EXPENSE: return {
+    ...state,
+    editor: true,
+    idToEdit: Number(action.editId),
+  };
+  case SAVE_EDIT: return {
+    ...state,
+    expenses: [...state.expenses.map((editExpense) => {
+      if (editExpense.id === state.idToEdit) {
+        return { ...editExpense, ...action.edited };
+      }
+      return editExpense;
+    })],
+    editor: false,
+    idToEdit: 0,
   };
   default: return state;
   }
