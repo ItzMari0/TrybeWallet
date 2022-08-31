@@ -8,6 +8,7 @@ const INITIAL_STATE = {
   expenses: [],
   editor: false,
   idToEdit: 0,
+  id: 0,
 };
 
 const wallet = (state = INITIAL_STATE, action) => {
@@ -22,12 +23,13 @@ const wallet = (state = INITIAL_STATE, action) => {
   case EXPENSES_LIST: return {
     ...state,
     expenses: [...state.expenses.filter((object) => object.currency !== ''),
-      { id: state.expenses.length, ...action.expenses }],
+      { id: state.id, ...action.expenses }],
+    id: state.id + 1,
   };
   case DELETE_EXPENSE: return {
     ...state,
     expenses: [...state.expenses
-      .filter((deleted) => deleted.id !== Number(action.expense))],
+      .filter((deleted) => deleted.id !== Number(action.expenseDetails))],
   };
   default: return state;
   }

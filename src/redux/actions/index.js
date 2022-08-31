@@ -41,10 +41,10 @@ export function expensesList(expenses) {
   };
 }
 
-export function deleteExpense(expense) {
+export function deleteExpense(expenseDetails) {
   return {
     type: DELETE_EXPENSE,
-    expense,
+    expenseDetails,
   };
 }
 

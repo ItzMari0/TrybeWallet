@@ -12,8 +12,8 @@ class Table extends Component {
 
   render() {
     const { expenses } = this.props;
-    const expenseToTable = expenses.map((expense, index) => (
-      <tr key={ index }>
+    const expenseToTable = expenses.map((expense) => (
+      <tr key={ expense.id }>
         <td>{expense.description}</td>
         <td>{expense.tag}</td>
         <td>{expense.method}</td>
@@ -43,7 +43,7 @@ class Table extends Component {
     return (
       <>
         <div>Table</div>
-        <table>
+        <table id="table">
           <thead>
             <tr>
               <th>Descrição</th>
@@ -57,7 +57,7 @@ class Table extends Component {
               <th>Editar/Excluir</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="tableBody">
             {expenseToTable}
           </tbody>
         </table>
