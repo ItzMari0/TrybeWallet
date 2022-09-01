@@ -3,6 +3,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
 import renderWithRouterAndRedux from './renderWith';
+import mockData from './mockData';
 
 const EMAIL_INPUT = 'email-input';
 const PASSWORD_INPUT = 'password-input';
@@ -79,8 +80,131 @@ describe('Testa os componentes do Projeto', () => {
       const tagInput = screen.getByTestId('tag-input');
       expect(tagInput).toBeInTheDocument();
 
-      const addExpenseBtn = screen.getByRole('button', { name: /Adicionar Despesas/i });
+      const addExpenseBtn = screen.getByRole('button', { name: /Adicionar despesa/i });
       expect(addExpenseBtn).toBeInTheDocument();
+    });
+
+    it('a função handleChange altera o valor do estado ao digitar no campo correspondente', () => {
+      const { history } = renderWithRouterAndRedux(<App />);
+
+      const emailInput = screen.getByTestId(EMAIL_INPUT);
+      const passwordInput = screen.getByTestId(PASSWORD_INPUT);
+      const loginBtn = screen.getByRole('button', { name: /Entrar/i });
+
+      userEvent.type(emailInput, EMAIL_TEST);
+      userEvent.type(passwordInput, '123456');
+      userEvent.click(loginBtn);
+      expect(history.location.pathname).toBe('/carteira');
+
+      const valueInput = screen.getByTestId('value-input');
+      userEvent.type(valueInput, '100');
+      // const currencyInput = screen.getByTestId('currency-input');
+      // userEvent.selectOptions(currencyInput, ['USD']);
+      // expect(currencyInput).toHaveProperty('value', 'USD');
+      expect(valueInput).toHaveProperty('value', '100');
+      expect(valueInput).toBeInTheDocument();
+    });
+
+    it('a despesa é adicionada na tabela', async () => {
+      const { history, store } = renderWithRouterAndRedux(<App />);
+
+      const emailInput = screen.getByTestId(EMAIL_INPUT);
+      const passwordInput = screen.getByTestId(PASSWORD_INPUT);
+      const loginBtn = screen.getByRole('button', { name: /Entrar/i });
+      userEvent.type(emailInput, EMAIL_TEST);
+      userEvent.type(passwordInput, '123456');
+      userEvent.click(loginBtn);
+      expect(history.location.pathname).toBe('/carteira');
+
+      const addExpenseBtn = screen.getByRole('button', { name: /Adicionar despesa/i });
+      userEvent.click(addExpenseBtn);
+
+      const { wallet: { editor } } = store.getState();
+      expect(editor).toBeFalsy();
+      expect(typeof (editor)).toBe('boolean');
+
+      const deleteBtn = await screen.findByRole('button', { name: /Excluir/i });
+      expect(deleteBtn).toBeInTheDocument();
+      const editBtn = await screen.findByRole('button', { name: /Editar/i });
+      expect(editBtn).toBeInTheDocument();
+    });
+
+    it('a despesa é excluída da tabela ao clicar no botão Excluir', async () => {
+      const { history, store } = renderWithRouterAndRedux(<App />);
+
+      const emailInput = screen.getByTestId(EMAIL_INPUT);
+      const passwordInput = screen.getByTestId(PASSWORD_INPUT);
+      const loginBtn = screen.getByRole('button', { name: /Entrar/i });
+      userEvent.type(emailInput, EMAIL_TEST);
+      userEvent.type(passwordInput, '123456');
+      userEvent.click(loginBtn);
+      expect(history.location.pathname).toBe('/carteira');
+
+      const addExpenseBtn = screen.getByRole('button', { name: /Adicionar despesa/i });
+      userEvent.click(addExpenseBtn);
+
+      const { wallet: { editor } } = store.getState();
+      expect(editor).toBeFalsy();
+      expect(typeof (editor)).toBe('boolean');
+
+      const deleteBtn = await screen.findByRole('button', { name: /Excluir/i });
+      expect(deleteBtn).toBeInTheDocument();
+      const editBtn = await screen.findByRole('button', { name: /Editar/i });
+      expect(editBtn).toBeInTheDocument();
+      userEvent.click(deleteBtn);
+      expect(deleteBtn).not.toBeInTheDocument();
+    });
+
+    it('é possível editar e salvar a alteração da despesa', async () => {
+      const { history, store } = renderWithRouterAndRedux(<App />);
+
+      const emailInput = screen.getByTestId(EMAIL_INPUT);
+      const passwordInput = screen.getByTestId(PASSWORD_INPUT);
+      const loginBtn = screen.getByRole('button', { name: /Entrar/i });
+      userEvent.type(emailInput, EMAIL_TEST);
+      userEvent.type(passwordInput, '123456');
+      userEvent.click(loginBtn);
+      expect(history.location.pathname).toBe('/carteira');
+
+      const addExpenseBtn = screen.getByRole('button', { name: /Adicionar despesa/i });
+      userEvent.click(addExpenseBtn);
+
+      const editBtn = await screen.findByRole('button', { name: /Editar/i });
+      userEvent.click(editBtn);
+      const { wallet: { editor } } = store.getState();
+      expect(editor).toBeTruthy();
+      expect(typeof (editor)).toBe('boolean');
+
+      const descriptionInput = screen.getByTestId('description-input');
+      userEvent.type(descriptionInput, 'combustível');
+
+      const saveEditExpenseBtn = screen.getByRole('button', { name: /Editar despesa/i });
+      expect(saveEditExpenseBtn).toBeInTheDocument();
+      userEvent.click(saveEditExpenseBtn);
+      expect(descriptionInput).toHaveProperty('value', 'combustível');
+    });
+
+    it('a API foi chamada', async () => {
+      global.fetch = jest.fn(() => Promise.resolve({
+        json: () => Promise.resolve(mockData),
+      }));
+      const { history, store } = renderWithRouterAndRedux(<App />);
+
+      const emailInput = screen.getByTestId(EMAIL_INPUT);
+      const passwordInput = screen.getByTestId(PASSWORD_INPUT);
+      const loginBtn = screen.getByRole('button', { name: /Entrar/i });
+      userEvent.type(emailInput, EMAIL_TEST);
+      userEvent.type(passwordInput, '123456');
+      userEvent.click(loginBtn);
+      expect(history.location.pathname).toBe('/carteira');
+
+      const addExpenseBtn = screen.getByRole('button', { name: /Adicionar despesa/i });
+      userEvent.click(addExpenseBtn);
+      expect(global.fetch).toBeCalledTimes(2);
+
+      const { wallet: { editor } } = store.getState();
+      expect(editor).toBeFalsy();
+      expect(typeof (editor)).toBe('boolean');
     });
   });
 });
