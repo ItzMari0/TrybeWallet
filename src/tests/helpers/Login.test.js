@@ -4,10 +4,12 @@ import userEvent from '@testing-library/user-event';
 import App from '../../App';
 import renderWithRouterAndRedux from './renderWith';
 import mockData from './mockData';
+import INITIAL_STATE from './InitialStateMock';
 
 const EMAIL_INPUT = 'email-input';
 const PASSWORD_INPUT = 'password-input';
 const EMAIL_TEST = 'tryber@trybe.com';
+const DESCRIPTION_INPUT = 'description-input';
 
 describe('Testa os componentes do Projeto', () => {
   describe('Testa a tela inicial de Login', () => {
@@ -68,7 +70,7 @@ describe('Testa os componentes do Projeto', () => {
       const valueInput = screen.getByTestId('value-input');
       expect(valueInput).toBeInTheDocument();
 
-      const descriptionInput = screen.getByTestId('description-input');
+      const descriptionInput = screen.getByTestId(DESCRIPTION_INPUT);
       expect(descriptionInput).toBeInTheDocument();
 
       const currencyInput = screen.getByTestId('currency-input');
@@ -116,8 +118,12 @@ describe('Testa os componentes do Projeto', () => {
       userEvent.click(loginBtn);
       expect(history.location.pathname).toBe('/carteira');
 
+      const descriptionInput = screen.getByTestId(DESCRIPTION_INPUT);
+      userEvent.type(descriptionInput, 'iFood');
+
       const addExpenseBtn = screen.getByRole('button', { name: /Adicionar despesa/i });
       userEvent.click(addExpenseBtn);
+      expect(descriptionInput).toBeInTheDocument();
 
       const { wallet: { editor } } = store.getState();
       expect(editor).toBeFalsy();
@@ -155,6 +161,33 @@ describe('Testa os componentes do Projeto', () => {
       expect(deleteBtn).not.toBeInTheDocument();
     });
 
+    it('Verificando se é possivel editar despesas', () => {
+      renderWithRouterAndRedux(<App />, { initialState: INITIAL_STATE, initialEntries: ['/carteira'] });
+
+      const editBtn = screen.getAllByRole('button', { name: /editar/i });
+      expect(editBtn).toHaveLength(2);
+      userEvent.click(editBtn[1]);
+
+      const valueInput = screen.getByLabelText(/despesa/i);
+      const descriptionInput = screen.getByLabelText(/descrição/i);
+      const currencyInput = screen.getByLabelText(/moeda/i);
+      const methodInput = screen.getByLabelText(/forma de pagamento/i);
+      const tagInput = screen.getByLabelText(/categoria/i);
+      const saveEditExpenseBtn = screen.getByRole('button', { name: /editar despesa/i });
+
+      userEvent.type(valueInput, '100');
+      userEvent.type(descriptionInput, 'Restaurante');
+
+      userEvent.selectOptions(currencyInput, 'CAD');
+
+      userEvent.selectOptions(methodInput, 'Dinheiro');
+      userEvent.selectOptions(tagInput, 'Alimentação');
+      userEvent.click(saveEditExpenseBtn);
+
+      // expect(screen.getByText('100.00')).toBeInTheDocument();
+      // expect(screen.getByText('Restaurante')).toBeInTheDocument();
+    });
+
     it('é possível editar e salvar a alteração da despesa', async () => {
       const { history, store } = renderWithRouterAndRedux(<App />);
 
@@ -175,7 +208,7 @@ describe('Testa os componentes do Projeto', () => {
       expect(editor).toBeTruthy();
       expect(typeof (editor)).toBe('boolean');
 
-      const descriptionInput = screen.getByTestId('description-input');
+      const descriptionInput = screen.getByTestId(DESCRIPTION_INPUT);
       userEvent.type(descriptionInput, 'combustível');
 
       const saveEditExpenseBtn = screen.getByRole('button', { name: /Editar despesa/i });
