@@ -161,7 +161,7 @@ describe('Testa os componentes do Projeto', () => {
       expect(deleteBtn).not.toBeInTheDocument();
     });
 
-    it('Verificando se é possivel editar despesas', () => {
+    it('é possivel editar despesas', () => {
       renderWithRouterAndRedux(<App />, { initialState: INITIAL_STATE, initialEntries: ['/carteira'] });
 
       const editBtn = screen.getAllByRole('button', { name: /editar/i });
@@ -188,7 +188,7 @@ describe('Testa os componentes do Projeto', () => {
       // expect(screen.getByText('Restaurante')).toBeInTheDocument();
     });
 
-    it('é possível editar e salvar a alteração da despesa', async () => {
+    it('é possível salvar a despesa editada', async () => {
       const { history, store } = renderWithRouterAndRedux(<App />);
 
       const emailInput = screen.getByTestId(EMAIL_INPUT);
